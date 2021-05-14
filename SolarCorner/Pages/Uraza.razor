@@ -1,0 +1,27 @@
+﻿@page "/uraza"
+@using Astronomy
+
+<h3>Uraza</h3>
+<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
+<ol>
+    <li>Задаём дату поста (или высчитываем, но это надо посмотреть)</li>
+    <li>
+        Задаём место
+        <ol type="a">
+            <li>Напрямую через широту, долготу</li>
+            <li>Прикрутить карту</li>
+            <li>Сделать список по городам</li>
+            <li>Считывать gps (только для телефонов?)</li>
+        </ol>
+
+    </li>
+    <li>Выдаём восход-заход солнца на указанное количество дней (можно сделать формат для печати)</li>
+    
+</ol>
+
+@code {
+    DateTime curTime = DateTime.Now;
+    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
+    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
+
+}

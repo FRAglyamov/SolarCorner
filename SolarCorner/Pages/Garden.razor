@@ -1,0 +1,15 @@
+﻿@page "/garden"
+@using Astronomy
+
+<h3>Garden</h3>
+<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
+
+<p>Когда лучше сажать по положению Луны</p>
+<p>Вывод положения луны, её фазы и календаря</p>
+
+@code {
+    DateTime curTime = DateTime.Now;
+    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
+    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
+
+}

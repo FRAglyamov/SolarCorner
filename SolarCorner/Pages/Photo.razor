@@ -1,0 +1,19 @@
+﻿@page "/photo"
+@using Astronomy
+
+<h3>Photo best moments</h3>
+<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
+<p>Sunrise time in Moscow: @MoscowSunTimes.Sunrise.Hour:@MoscowSunTimes.Sunrise.Minute:@MoscowSunTimes.Sunrise.Second</p>
+<p>Sunset time in Moscow: @MoscowSunTimes.Sunset.Hour:@MoscowSunTimes.Sunset.Minute:@MoscowSunTimes.Sunset.Second</p>
+
+<p>Sunrise time in Kazan: @KazanSunTimes.Sunrise.Hour:@KazanSunTimes.Sunrise.Minute:@KazanSunTimes.Sunrise.Second</p>
+<p>Sunset time in Kazan: @KazanSunTimes.Sunset.Hour:@KazanSunTimes.Sunset.Minute:@KazanSunTimes.Sunset.Second</p>
+
+<p>Вывод промежутков восхода-захода солнца для создания красивых снимков на фоне заката</p>
+
+@code {
+    DateTime curTime = DateTime.Now;
+    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
+    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
+
+}
