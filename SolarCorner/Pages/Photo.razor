@@ -2,18 +2,29 @@
 @using Astronomy
 
 <h3>Photo best moments</h3>
-<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
-<p>Sunrise time in Moscow: @MoscowSunTimes.Sunrise.Hour:@MoscowSunTimes.Sunrise.Minute:@MoscowSunTimes.Sunrise.Second</p>
-<p>Sunset time in Moscow: @MoscowSunTimes.Sunset.Hour:@MoscowSunTimes.Sunset.Minute:@MoscowSunTimes.Sunset.Second</p>
 
-<p>Sunrise time in Kazan: @KazanSunTimes.Sunrise.Hour:@KazanSunTimes.Sunrise.Minute:@KazanSunTimes.Sunrise.Second</p>
-<p>Sunset time in Kazan: @KazanSunTimes.Sunset.Hour:@KazanSunTimes.Sunset.Minute:@KazanSunTimes.Sunset.Second</p>
+<h4>
+    Sunrise period: 
+    @selectedTimes.Sunrise.Hour:@selectedTimes.Sunrise.Minute:@selectedTimes.Sunrise.Second
+    - @selectedTimes.SunriseEnd.Hour:@selectedTimes.SunriseEnd.Minute:@selectedTimes.SunriseEnd.Second
+</h4>
 
+<h4>
+    Golden hours period:
+    @selectedTimes.GoldenHour.Hour:@selectedTimes.GoldenHour.Minute:@selectedTimes.GoldenHour.Second
+    - @selectedTimes.GoldenHourEnd.Hour:@selectedTimes.GoldenHourEnd.Minute:@selectedTimes.GoldenHourEnd.Second
+</h4>
+
+<h4>
+    Sunset period:
+    @selectedTimes.SunsetStart.Hour:@selectedTimes.SunsetStart.Minute:@selectedTimes.SunsetStart.Second
+    - @selectedTimes.Sunset.Hour:@selectedTimes.Sunset.Minute:@selectedTimes.Sunset.Second
+</h4>
 <p>Вывод промежутков восхода-захода солнца для создания красивых снимков на фоне заката</p>
 
 @code {
-    DateTime curTime = DateTime.Now;
-    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
-    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
+    SunTimes selectedTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
+    //SunTimes MoscowSunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, 55.75700, 37.61500);
+    //SunTimes KazanSunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, 55.80030, 49.10827);
 
 }

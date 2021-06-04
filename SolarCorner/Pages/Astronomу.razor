@@ -2,13 +2,29 @@
 @using Astronomy
 
 <h3>Astronomy</h3>
-<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
+<h4>Earth ecliptical coordinates: @earthEclipticalCoordinates</h4>
+
+<table class="table">
+    <tr>
+        <td>&nbsp;</td>
+        <th scope="col">Ecliptical</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+    </tr>
+    <tr><th scope="row">Earth</th><td>@eclipticalCoordinates[0]</td><td>11</td><td>22</td><td>33</td></tr>
+</table>
 
 <p>Выдача местонахождения планет</p>
 
-@code {
-    DateTime curTime = DateTime.Now;
-    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
-    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
 
+@code {
+    List<double> eclipticalCoordinates = new List<double>();
+    double earthEclipticalCoordinates = Planets.getEclipticalCoordinates(PlanetName.Earth, MainLayout.selectedDate);
+    protected override async Task OnInitializedAsync()
+    {
+        eclipticalCoordinates.Add(earthEclipticalCoordinates);
+        eclipticalCoordinates.Add(0.1);
+    }
+    // Можно сделать табличку - по одной оси планеты, по другой различные координаты и т.п.
 }
