@@ -2,17 +2,50 @@
 @using Astronomy
 
 <h3>Astronomy</h3>
-<h4>Earth ecliptical coordinates: @earthEclipticalCoordinates</h4>
 
 <table class="table">
     <tr>
         <td>&nbsp;</td>
-        <th scope="col">Ecliptical</th>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <th scope="col">@GetPlanetName(i)</th>
+        }
     </tr>
-    <tr><th scope="row">Earth</th><td>@eclipticalCoordinates[0]</td><td>11</td><td>22</td><td>33</td></tr>
+    <tr>
+        <th scope="row">Mean anomaly</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <td>@GetMeanAnomaly(i)</td>
+        }
+    </tr>
+    <tr>
+        <th scope="row">Equation of center</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <td>@GetEquationOfCenter(i)</td>
+        }
+    </tr>
+    <tr>
+        <th scope="row">Sidereal time</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <td>@GetSiderealTime(i)</td>
+        }
+    </tr>
+    <tr>
+        <th scope="row">Ecliptical coordinates</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <td>@GetEclipticalCoordinates(i)</td>
+        }
+    </tr>
+    <tr>
+        <th scope="row">Equatorial coordinates</th>
+        @for (int i = 0; i < 7; i++)
+        {
+            <td>@GetEquatorialCoordinates(i)</td>
+        }
+    </tr>
 </table>
 
 <p>Выдача местонахождения планет</p>
@@ -25,6 +58,42 @@
     {
         eclipticalCoordinates.Add(earthEclipticalCoordinates);
         eclipticalCoordinates.Add(0.1);
+        for (int i = 0; i < 7; i++)
+        {
+
+        }
     }
+
+    private string GetPlanetName(int i)
+    {
+        return ((PlanetName)i).ToString();
+    }
+
+    private double GetMeanAnomaly(int i)
+    {
+        return Planets.GetMeanAnomaly((PlanetName)i, MainLayout.selectedDate);
+    }
+
+    private double GetEquationOfCenter(int i)
+    {
+        return Planets.GetEquationOfCenter((PlanetName)i, MainLayout.selectedDate);
+    }
+
+    private double GetSiderealTime(int i)
+    {
+        return Planets.GetSiderealTime((PlanetName)i, MainLayout.selectedDate, MainLayout.longitude); // longtitude of Earth location?
+    }
+
+    private double GetEclipticalCoordinates(int i)
+    {
+        return Planets.getEclipticalCoordinates((PlanetName)i, MainLayout.selectedDate);
+    }
+
+    private double GetEquatorialCoordinates(int i)
+    {
+        return Planets.GetEquationOfCenter((PlanetName)i, MainLayout.selectedDate);
+    }
+
+
     // Можно сделать табличку - по одной оси планеты, по другой различные координаты и т.п.
 }
