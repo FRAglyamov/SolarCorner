@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Astronomy
+@using Darnton.Blazor.DeviceInterop.Geolocation
+@inject IGeolocationService GeolocationService
 
 <div class="page">
     <div class="sidebar">
@@ -8,14 +10,23 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <label for="SelectedDate" class="control-label">Date</label>
-            <input type="datetime-local" form="SelectedDate" class="form-control" @bind="@selectedDate" />
+            <div class="input-group mx-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="date-addon">Date</span>
+                </div>
+                <input type="datetime-local" form="SelectedDate" class="form-control" aria-describedby="date-addon" @bind="@selectedDate" />
+            </div>
 
-            <label for="Latitude" class="control-label">Lat</label>
-            <input form="Latitude" class="form-control" @bind="@latitude" />
-
-            <label for="Longitude" class="control-label">Lng</label>
-            <input form="Longitude" class="form-control" @bind="@longitude" />
+            <div class="input-group mx-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="date-position">Lat. and Long.</span>
+                </div>
+                <input form="Latitude" class="form-control" @bind="@latitude" />
+                <input form="Longitude" class="form-control" @bind="@longitude" />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" @onclick="ResetCurrentPosition">Reset location</button>
+                </div>
+            </div>
         </div>
 
         <div class="content px-4">
@@ -26,7 +37,25 @@
 
 @code {
     public static DateTime selectedDate = DateTime.Now;
-    public static double latitude = 55.80030;
-    public static double longitude = 49.10827;
+
+    public static double latitude = 0;
+    public static double longitude = 0;
     //public static SunTimes selectedTimes = SunCalculator.GetTimes(selectedDate, latitude, longitude);
+
+    protected GeolocationResult CurrentPositionResult;
+    protected double? CurrentLatitude => CurrentPositionResult?.Position?.Coords?.Latitude;
+    protected double? CurrentLongitude => CurrentPositionResult?.Position?.Coords?.Longitude;
+
+    protected async override Task OnInitializedAsync()
+    {
+        ResetCurrentPosition();
+    }
+
+    public async void ResetCurrentPosition()
+    {
+        CurrentPositionResult = await GeolocationService.GetCurrentPosition();
+        latitude = (double) CurrentLatitude;
+        longitude = (double) CurrentLongitude;
+        StateHasChanged();
+    }
 }
