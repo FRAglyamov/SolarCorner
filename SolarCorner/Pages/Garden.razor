@@ -1,15 +1,284 @@
 ﻿@page "/garden"
 @using Astronomy
+@using System.ComponentModel
+@using System.Reflection
+@inject IJSRuntime JS
+@inject IJSRuntime JsRuntime
 
 <h3>Garden</h3>
-<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
+<p>Астроагрономические советы</p>
 
-<p>Когда лучше сажать по положению Луны</p>
-<p>Вывод положения луны, её фазы и календаря</p>
+<h4 id="zod"></h4>
+<h4 id="phaze"></h4>
+
+
+<p id="fert"></p>
+<p id="water"></p>
+<p id="planting"></p>
+<p id="wheat"></p>
+<button @onclick="SetData">Обновить данные</button>
 
 @code {
-    DateTime curTime = DateTime.Now;
-    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
-    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
+    static string GetDescription(Enum enumElement)
+    {
+        Type type = enumElement.GetType();
 
+        MemberInfo[] memInfo = type.GetMember(enumElement.ToString());
+        if (memInfo != null && memInfo.Length > 0)
+        {
+            object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            if (attrs != null && attrs.Length > 0)
+                return ((DescriptionAttribute)attrs[0]).Description;
+        }
+
+        return enumElement.ToString();
+    }
+
+    enum MoonPhaze
+    {
+        [Description("Фаза луны: Новая луна")]
+        NewMoon,
+        [Description("Фаза луны: Растущая луна")]
+        GrowsMoon,
+        [Description("Фаза луны: Полная луна")]
+        FullMoon,
+        [Description("Фаза луны: Убывающая луна")]
+        OldMoon,
+        [Description("Ошибка получения фазы луны")]
+        IncorrectPhaze
+    }
+
+    MoonPhaze GetMoonPhaze()
+    {
+        return GetMoonPhaze(MainLayout.selectedDate);
+    }
+
+    MoonPhaze GetMoonPhaze(DateTime dateTime)
+    {
+        Tuple<double, double, double> moonIllumination = MoonCalculator.GetMoonIllumination(dateTime);
+        double phaze = moonIllumination.Item2;
+        if (phaze <= 0.25)
+        {
+            return MoonPhaze.NewMoon;
+        }
+        if (phaze <= 0.5)
+        {
+            return MoonPhaze.GrowsMoon;
+        }
+        if (phaze <= 0.75)
+        {
+            return MoonPhaze.FullMoon;
+        }
+        if (phaze <= 1)
+        {
+            return MoonPhaze.OldMoon;
+        }
+        throw new Exception("Incorrect moon phaze");
+    }
+
+    string GetVerboseMoonPhaze()
+    {
+        return GetVerboseMoonPhaze(MainLayout.selectedDate);
+    }
+
+    string GetVerboseMoonPhaze(DateTime dateTime)
+    {
+        MoonPhaze moonPhaze;
+        try
+        {
+            moonPhaze = GetMoonPhaze(dateTime);
+        }
+        catch
+        {
+            moonPhaze = MoonPhaze.IncorrectPhaze;
+        }
+        return GetDescription(moonPhaze);
+    }
+
+    enum Zodiac
+    {
+        [Description("Овен")]
+        Aries,
+        [Description("Телец")]
+        Taurus,
+        [Description("Близнецы")]
+        Jemini,
+        [Description("Рак")]
+        Cancer,
+        [Description("Лев")]
+        Leo,
+        [Description("Дева")]
+        Virgo,
+        [Description("Весы")]
+        Libra,
+        [Description("Скорпион")]
+        Scorpio,
+        [Description("Стрелец")]
+        Sagittarius,
+        [Description("Козерог")]
+        Capricorn,
+        [Description("Водолей")]
+        Aquarius,
+        [Description("Рыбы")]
+        Pisces
+    }
+
+    async Task SetData()
+    {
+        var zodVerbose = "Луна находится в зодиаке: ";
+        var response = await JsRuntime.InvokeAsync<int>("getZod", ((DateTimeOffset)MainLayout.selectedDate).ToUnixTimeSeconds());
+
+        var moonPhaze = GetMoonPhaze();
+        var zodiac = (Zodiac)response;
+
+        var nextDay = ((DateTimeOffset)MainLayout.selectedDate.AddDays(1)).ToUnixTimeSeconds();
+        response = await JsRuntime.InvokeAsync<int>("getZod", nextDay);
+        var nextDayZodiac = (Zodiac)response;
+
+
+        zodVerbose += GetDescription(zodiac);
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "zod", zodVerbose);
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "fert", GetFertilizingAdvice(moonPhaze));
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "phaze", GetVerboseMoonPhaze());
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "water", GetWateringAdvice(zodiac));
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "planting", GetPlantingAdvice(zodiac, moonPhaze, zodiac != nextDayZodiac));
+        await JsRuntime.InvokeVoidAsync("setElementTextById", "wheat", GetWheatAdvise(zodiac, moonPhaze));
+    }
+
+    string GetFertilizingAdvice(MoonPhaze moonPhaze)
+    {
+        switch (moonPhaze)
+        {
+            case MoonPhaze.GrowsMoon:
+                return "Рекомендуется проводить минеральную подкормку";
+            case MoonPhaze.OldMoon:
+                return "Рекомендуется проводить органическую подкормку";
+            case MoonPhaze.FullMoon:
+            case MoonPhaze.NewMoon:
+                return "Не рекомендуется проводить подкормку";
+            default:
+                return "Ошибка получения фазы луны";
+        }
+    }
+
+    string GetWateringAdvice(Zodiac zodiac)
+    {
+        switch (zodiac)
+        {
+            case Zodiac.Aries:
+            case Zodiac.Leo:
+            case Zodiac.Sagittarius:
+                return "Рекомендуется усиление полива, растения сегодня будут усваивать воду хуже";
+            case Zodiac.Taurus:
+            case Zodiac.Jemini:
+            case Zodiac.Virgo:
+            case Zodiac.Libra:
+            case Zodiac.Capricorn:
+            case Zodiac.Aquarius:
+                return "Луна сегодня не влияет на усваиваемость воды растениями";
+            case Zodiac.Pisces:
+            case Zodiac.Scorpio:
+            case Zodiac.Cancer:
+                return "Вода сегодня будет усваиваться растениями хорошо, обильно поливать не рекомендуется";
+            default:
+                return "Ошибка получения фазы луны";
+        }
+    }
+
+    string GetPlantingAdvice(Zodiac zodiac, MoonPhaze moonPhaze, bool isLastDay)
+    {
+        switch (zodiac)
+        {
+            case Zodiac.Aries:
+            case Zodiac.Jemini:
+            case Zodiac.Leo:
+            case Zodiac.Sagittarius:
+            case Zodiac.Aquarius:
+                return "Луна неблагоприятна для посевов и пересадок";
+            case Zodiac.Cancer:
+            case Zodiac.Scorpio:
+            case Zodiac.Taurus:
+            case Zodiac.Virgo:
+            case Zodiac.Libra:
+            case Zodiac.Capricorn:
+            case Zodiac.Pisces:
+                return GoodZodiacMoonPhaseSwitcher(moonPhaze, isLastDay);
+            default:
+                return "Ошибка получения фазы луны";
+        }
+    }
+
+    string GoodZodiacMoonPhaseSwitcher(MoonPhaze moonPhaze, bool isLastDay)
+    {
+        switch (moonPhaze)
+        {
+            case MoonPhaze.NewMoon:
+            case MoonPhaze.GrowsMoon:
+                if (!isLastDay)
+                {
+                    return "Благоприятный знак, но фаза неблагоприятна. Дождитесь последнего дня знака для посева";
+                }
+                else
+                {
+                    return "Последний день благоприятного знака, фаза луны не влияет. Можно высаживать растения";
+                }
+            case MoonPhaze.FullMoon:
+            case MoonPhaze.OldMoon:
+                return "Знак и фаза благоприятны. Можно высаживать растения";
+            case MoonPhaze.IncorrectPhaze:
+            default:
+                return "Ошибка получения фазы луны";
+        }
+    }
+
+    string GetWheatAdvise(Zodiac zodiac, MoonPhaze moonPhaze)
+    {
+        var advise = "";
+
+        switch (zodiac)
+        {
+            case Zodiac.Aries:
+            case Zodiac.Jemini:
+            case Zodiac.Leo:
+            case Zodiac.Aquarius:
+            case Zodiac.Sagittarius:
+                advise += "Луна находится в сухом знаке, сушка сена облегчена.";
+                break;
+            case Zodiac.Taurus:
+            case Zodiac.Virgo:
+            case Zodiac.Libra:
+            case Zodiac.Capricorn:
+                advise += "Лунный знак не влияет на сенокос.";
+                break;
+            case Zodiac.Cancer:
+            case Zodiac.Pisces:
+            case Zodiac.Scorpio:
+                advise += "Луна находится в водном знаке, риск загнивания сена, покос не рекомендован.";
+                break;
+            default:
+                return "Ошибка получения фазы луны";
+        }
+
+        switch (moonPhaze)
+        {
+            case MoonPhaze.NewMoon:
+                advise += " В новолунии сено сохнет быстрее, но беднее на минералы. Рекомендуется как подстилка или биотопливо.";
+                break;
+            case MoonPhaze.GrowsMoon:
+                advise += " Новая луна не влияет на питательность сена.";
+                break;
+            case MoonPhaze.FullMoon:
+                advise += " В полнолунии самое богатое на минералы сено, отличный корм для скота.";
+                break;
+            case MoonPhaze.OldMoon:
+                advise += " Старая луна не влияет на питательность сена.";
+                break;
+            case MoonPhaze.IncorrectPhaze:
+                break;
+            default:
+                return "Ошибка получения фазы луны";
+        }
+
+        return advise;
+    }
 }
