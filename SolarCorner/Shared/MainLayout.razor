@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using Astronomy
 @using Darnton.Blazor.DeviceInterop.Geolocation
 @inject IGeolocationService GeolocationService
 
@@ -39,7 +38,6 @@
 
     public static double latitude = 0;
     public static double longitude = 0;
-    //public static SunTimes selectedTimes = SunCalculator.GetTimes(selectedDate, latitude, longitude);
 
     protected GeolocationResult CurrentPositionResult;
     protected double? CurrentLatitude => CurrentPositionResult?.Position?.Coords?.Latitude;
