@@ -4,23 +4,23 @@
 <h3>Dark time</h3>
 <h4>
     Dusk - Dawn period:
-    @sunTimes.Dusk.Hour:@sunTimes.Dusk.Minute:@sunTimes.Dusk.Second
-    - @sunTimes.Dawn.Hour:@sunTimes.Dawn.Minute:@sunTimes.Dawn.Second
+    @sunTimes.Dusk.ToString("HH:mm:ss")
+    - @sunTimes.Dawn.ToString("HH:mm:ss")
 </h4>
 <h4>
     Nautial Dusk - Dawn period:
-    @sunTimes.NauticalDusk.Hour:@sunTimes.NauticalDusk.Minute:@sunTimes.NauticalDusk.Second
-    - @sunTimes.NauticalDawn.Hour:@sunTimes.NauticalDawn.Minute:@sunTimes.NauticalDawn.Second
+    @sunTimes.NauticalDusk.ToString("HH:mm:ss")
+    - @sunTimes.NauticalDawn.ToString("HH:mm:ss")
 </h4>
 <h4>
     Night period:
-    @sunTimes.Night.Hour:@sunTimes.Night.Minute:@sunTimes.Night.Second
-    - @sunTimes.NightEnd.Hour:@sunTimes.NightEnd.Minute:@sunTimes.NightEnd.Second
+    @sunTimes.Night.ToString("HH:mm:ss")
+    - @sunTimes.NightEnd.ToString("HH:mm:ss")
 </h4>
 <h4>
     Moon Rise - Set period:
-    @moonTimes.Rise.Hour:@moonTimes.Rise.Minute:@moonTimes.Rise.Second
-    - @moonTimes.Set.Hour:@moonTimes.Set.Minute:@moonTimes.Set.Second
+    @moonTimes.Rise.ToString("HH:mm:ss")
+    - @moonTimes.Set.ToString("HH:mm:ss")
 </h4>
 <h4>
     Moon Fraction:
@@ -40,7 +40,4 @@
     SunTimes sunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
     MoonTimes moonTimes = MoonCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
     Tuple<double, double, double> moonIllumination = MoonCalculator.GetMoonIllumination(MainLayout.selectedDate);
-    //SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
-    //SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
-
 }

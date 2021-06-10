@@ -5,26 +5,23 @@
 
 <h4>
     Sunrise period: 
-    @selectedTimes.Sunrise.Hour:@selectedTimes.Sunrise.Minute:@selectedTimes.Sunrise.Second
-    - @selectedTimes.SunriseEnd.Hour:@selectedTimes.SunriseEnd.Minute:@selectedTimes.SunriseEnd.Second
+    @selectedTimes.Sunrise.ToString("HH:mm:ss")
+    - @selectedTimes.SunriseEnd.ToString("HH:mm:ss")
 </h4>
 
 <h4>
     Golden hours period:
-    @selectedTimes.GoldenHour.Hour:@selectedTimes.GoldenHour.Minute:@selectedTimes.GoldenHour.Second
-    - @selectedTimes.GoldenHourEnd.Hour:@selectedTimes.GoldenHourEnd.Minute:@selectedTimes.GoldenHourEnd.Second
+    @selectedTimes.GoldenHour.ToString("HH:mm:ss")
+    - @selectedTimes.GoldenHourEnd.ToString("HH:mm:ss")
 </h4>
 
 <h4>
     Sunset period:
-    @selectedTimes.SunsetStart.Hour:@selectedTimes.SunsetStart.Minute:@selectedTimes.SunsetStart.Second
-    - @selectedTimes.Sunset.Hour:@selectedTimes.Sunset.Minute:@selectedTimes.Sunset.Second
+    @selectedTimes.SunsetStart.ToString("HH:mm:ss")
+    - @selectedTimes.Sunset.ToString("HH:mm:ss")
 </h4>
 <p>Вывод промежутков восхода-захода солнца для создания красивых снимков на фоне заката</p>
 
 @code {
     SunTimes selectedTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
-    //SunTimes MoscowSunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, 55.75700, 37.61500);
-    //SunTimes KazanSunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, 55.80030, 49.10827);
-
 }
