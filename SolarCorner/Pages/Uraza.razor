@@ -1,14 +1,32 @@
 ﻿@page "/uraza"
 @using Astronomy
+@using System.Globalization
 
 <h3>Uraza</h3>
+<br />
+<h5>
+    Date in Hijri:
+    <br />
+    @umAlQura.GetDayOfMonth(MainLayout.selectedDate)/@umAlQura.GetMonth(MainLayout.selectedDate)/@umAlQura.GetYear(MainLayout.selectedDate)
+</h5>
 
-<label for="StartDate" class="control-label">Start</label>
-<input type="datetime-local" form="StartDate" class="form-control" @bind="@urazaStartDate" />
-<label for="EndDate" class="control-label">End</label>
-<input type="datetime-local" form="EndDate" class="form-control" @bind="@urazaEndDate" />
 
-<button @onclick="GetUrazaTable">Update table</button>
+<div class="row">
+
+    <div class="col-md-4">
+        <label for="StartDate" class="control-label">Start</label>
+        <input type="datetime-local" form="StartDate" class="form-control" @bind="@urazaStartDate" />
+    </div>
+
+    <div class="col-md-4">
+        <label for="EndDate" class="control-label">End</label>
+        <input type="datetime-local" form="EndDate" class="form-control" @bind="@urazaEndDate" />
+    </div>
+
+</div>
+<br />
+
+<button class="btn btn-primary" @onclick="GetUrazaTable">Update table</button>
 
 <table class="table" id="myTable">
     <thead>
@@ -31,23 +49,8 @@
 </table>
 
 
-
-<ol>
-    <li>Задаём дату поста (или высчитываем, но это надо посмотреть)</li>
-    <li>
-        Задаём место
-        <ol type="a">
-            <li>Напрямую через широту, долготу</li>
-            <li>Прикрутить карту</li>
-            <li>Сделать список по городам</li>
-            <li>Считывать gps (только для телефонов?)</li>
-        </ol>
-
-    </li>
-    <li>Выдаём восход-заход солнца на указанное количество дней (можно сделать формат для печати)</li>
-</ol>
-
 @code {
+    Calendar umAlQura = new UmAlQuraCalendar();
     SunTimes sunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
     DateTime urazaStartDate = DateTime.Now;
     DateTime urazaEndDate = DateTime.Now.AddDays(30);

@@ -2,25 +2,28 @@
 @using Astronomy
 
 <h3>Photo best moments</h3>
-
+<h4>A corner for photographers, romantics, etc., which help you to know the most beautiful time of the sky.</h4>
+<br />
 <h4>
-    Sunrise period: 
+    Sunrise period:
+    <br />
     @selectedTimes.Sunrise.ToString("HH:mm:ss")
     - @selectedTimes.SunriseEnd.ToString("HH:mm:ss")
 </h4>
 
 <h4>
     Golden hours period:
+    <br />
     @selectedTimes.GoldenHour.ToString("HH:mm:ss")
     - @selectedTimes.GoldenHourEnd.ToString("HH:mm:ss")
 </h4>
 
 <h4>
     Sunset period:
+    <br />
     @selectedTimes.SunsetStart.ToString("HH:mm:ss")
     - @selectedTimes.Sunset.ToString("HH:mm:ss")
 </h4>
-<p>Вывод промежутков восхода-захода солнца для создания красивых снимков на фоне заката</p>
 
 @code {
     SunTimes selectedTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
