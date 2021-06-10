@@ -26,6 +26,7 @@ function getZodText(dateTimestamp) {
     todayall = new Date(dateTimestamp * 1000);
     return zod.split(",")[Math.floor(getPos().MnLong / 30)].replace(/\s/g, "");
 }
+
 function getZod(dateTimestamp) {
     todayall = new Date(dateTimestamp * 1000);
     return Math.floor(getPos().MnLong / 30);
