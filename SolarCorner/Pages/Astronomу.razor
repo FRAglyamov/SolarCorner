@@ -2,6 +2,7 @@
 @using Astronomy
 
 <h3>Astronomy</h3>
+<br />
 
 <table class="table">
     <tr>
@@ -48,22 +49,8 @@
     </tr>
 </table>
 
-<p>Выдача местонахождения планет</p>
-
 
 @code {
-    List<double> eclipticalCoordinates = new List<double>();
-    double earthEclipticalCoordinates = Planets.getEclipticalCoordinates(PlanetName.Earth, MainLayout.selectedDate);
-    protected override async Task OnInitializedAsync()
-    {
-        eclipticalCoordinates.Add(earthEclipticalCoordinates);
-        eclipticalCoordinates.Add(0.1);
-        for (int i = 0; i < 7; i++)
-        {
-
-        }
-    }
-
     private string GetPlanetName(int i)
     {
         return ((PlanetName)i).ToString();
@@ -93,7 +80,4 @@
     {
         return Planets.GetEquationOfCenter((PlanetName)i, MainLayout.selectedDate);
     }
-
-
-    // Можно сделать табличку - по одной оси планеты, по другой различные координаты и т.п.
 }

@@ -1,27 +1,70 @@
 ﻿@page "/uraza"
 @using Astronomy
+@using System.Globalization
 
 <h3>Uraza</h3>
-<p>Current time: @curTime.Hour:@curTime.Minute:@curTime.Second</p>
-<ol>
-    <li>Задаём дату поста (или высчитываем, но это надо посмотреть)</li>
-    <li>
-        Задаём место
-        <ol type="a">
-            <li>Напрямую через широту, долготу</li>
-            <li>Прикрутить карту</li>
-            <li>Сделать список по городам</li>
-            <li>Считывать gps (только для телефонов?)</li>
-        </ol>
+<br />
+<h5>
+    Date in Hijri:
+    <br />
+    @umAlQura.GetDayOfMonth(MainLayout.selectedDate)/@umAlQura.GetMonth(MainLayout.selectedDate)/@umAlQura.GetYear(MainLayout.selectedDate)
+</h5>
 
-    </li>
-    <li>Выдаём восход-заход солнца на указанное количество дней (можно сделать формат для печати)</li>
-    
-</ol>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <label for="StartDate" class="control-label">Start</label>
+        <input type="datetime-local" form="StartDate" class="form-control" @bind="@urazaStartDate" />
+    </div>
+
+    <div class="col-md-4">
+        <label for="EndDate" class="control-label">End</label>
+        <input type="datetime-local" form="EndDate" class="form-control" @bind="@urazaEndDate" />
+    </div>
+
+</div>
+<br />
+
+<button class="btn btn-primary" @onclick="GetUrazaTable">Update table</button>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <td>&nbsp;</td>
+            <th>Sunrise</th>
+            <th>Sunset</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in dates)
+        {
+            <tr>
+                <td>@d.ToString("yyyy/MM/dd")</td>
+                <td>@GetSunTime(d).Sunrise.ToString("HH:mm:ss")</td>
+                <td>@GetSunTime(d).Sunset.ToString("HH:mm:ss")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 
 @code {
-    DateTime curTime = DateTime.Now;
-    SunTimes MoscowSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.75700, 37.61500);
-    SunTimes KazanSunTimes = SunCalculator.GetTimes(DateTime.Now, 55.80030, 49.10827);
-
+    Calendar umAlQura = new UmAlQuraCalendar();
+    SunTimes sunTimes = SunCalculator.GetTimes(MainLayout.selectedDate, MainLayout.latitude, MainLayout.longitude);
+    DateTime urazaStartDate = DateTime.Now;
+    DateTime urazaEndDate = DateTime.Now.AddDays(30);
+    List<DateTime> dates = new List<DateTime>();
+    private void GetUrazaTable()
+    {
+        dates.Clear();
+        for (int i = 0; i < (urazaEndDate.Date - urazaStartDate.Date).Days; i++)
+        {
+            dates.Add(urazaStartDate.Date.AddDays(i));
+        }
+    }
+    private SunTimes GetSunTime(DateTime dateTime)
+    {
+        return SunCalculator.GetTimes(dateTime, MainLayout.latitude, MainLayout.longitude);
+    }
 }
