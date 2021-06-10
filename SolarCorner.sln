@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolarCorner", "SolarCorner\SolarCorner.csproj", "{AA49AA83-81A1-451B-BFF6-8CE543BA1ABE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Darnton.Blazor.DeviceInterop", "..\BlazorDeviceInterop\Darnton.Blazor.DeviceInterop\Darnton.Blazor.DeviceInterop.csproj", "{E7DE9F05-D284-453C-B5EA-D84E3B94F52A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AA49AA83-81A1-451B-BFF6-8CE543BA1ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA49AA83-81A1-451B-BFF6-8CE543BA1ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA49AA83-81A1-451B-BFF6-8CE543BA1ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7DE9F05-D284-453C-B5EA-D84E3B94F52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7DE9F05-D284-453C-B5EA-D84E3B94F52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7DE9F05-D284-453C-B5EA-D84E3B94F52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7DE9F05-D284-453C-B5EA-D84E3B94F52A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
